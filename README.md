@@ -1,3 +1,3 @@
-# Full Stack App Test
+# T3 Full Stack App Test
 
-This project has been built using Next.js and Create T3 App
+More info coming soon...
