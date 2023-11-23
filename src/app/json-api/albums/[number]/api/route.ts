@@ -1,7 +1,14 @@
-export function GET(
+export async function GET(
   request: Request,
   { params }: { params: { number: string } }
 ) {
-  // fetch the endpoint https://jsonplaceholder.typicode.com/albums/{number} and return the response
-  return fetch(`https://jsonplaceholder.typicode.com/albums/${params.number}`);
+  const data = await fetch(
+    `https://jsonplaceholder.typicode.com/albums/${params.number}`
+  )
+    .then((response) => response.json())
+    .then((json) => {
+      return json as object;
+    });
+
+  return new Response(JSON.stringify(data));
 }
