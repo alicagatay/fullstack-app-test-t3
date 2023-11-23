@@ -1,41 +1,44 @@
 "use client";
-import { useState, useEffect } from "react";
 import styles from "./styles.module.css";
 import { useParams } from "next/navigation";
+import useSWR from "swr";
 
 type APIResponse = {
   userId: number;
   id: number;
   title: string;
 };
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export default function Page() {
-  const [data, setData] = useState<APIResponse | null>(null);
   const params = useParams();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/json-api/albums/${params.number as string}/api`
-        );
-        const jsonData: APIResponse = (await response.json()) as APIResponse;
-        setData(jsonData);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
+  const { data, error, isLoading } = useSWR<APIResponse, Error>(
+    `${params.number as string}/api`,
+    fetcher
+  );
 
-    fetchData().catch((error) => console.error("Error in fetchData:", error));
-  }, [params.number]);
+  // Handling loading state
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  // Handling error state
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     <div className={styles.main}>
-      {data &&
+      {data ? (
         Object.entries(data).map(([key, value]) => (
           <h1 key={key}>
             {key}: {value}
           </h1>
-        ))}
+        ))
+      ) : (
+        <div>No data found</div>
+      )}
     </div>
   );
 }
