@@ -20,12 +20,20 @@ export default function Page() {
 
   // Handling loading state
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className={styles.main}>
+        <h1>Loading...</h1>
+      </div>
+    );
   }
 
   // Handling error state
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return (
+      <div className={styles.main}>
+        <h1>Error: {error.message}</h1>
+      </div>
+    );
   }
 
   return (
